@@ -31,7 +31,7 @@ public class ParkingManager {
     public void run (String[] args) {
         Scanner sc = new Scanner(System.in);
         boolean quit = false;
-        HashMap<Integer, CarInfo> parkList = new HashMap<>();    //주차정보 저장하는 해쉬맵
+        ParkingCRUD pCRUD = new ParkingCRUD();
 
         do{
             System.out.print("1) enter, 2) exit, 3) list 4) quit > ");
@@ -41,14 +41,14 @@ public class ParkingManager {
             // 정규분포 활용해 첫 문자를 가져오게 바꿈
             switch (choice){
                 case 1:     //주차 차량 등록
-
+                    pCRUD.createParking();
                     break;
                 case 2: //출차, 차 번호 입력해서 몇분 나왔는지, 얼마 내야하는지 보여줌.
-
+                    pCRUD.exitParking();
                     break;
 
                 case 3: //현재 주차된 모든 차량 정보와 입차시간 출력.
-
+                    pCRUD.listParking();
                     break;
 
                 case 4: //프로그램 종료
