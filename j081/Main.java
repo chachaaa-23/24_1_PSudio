@@ -18,7 +18,7 @@ public class Main {
 
     public void run (String[] args){
         String rawString = readFile();
-        System.out.println("rawString : "+ rawString);
+        //System.out.println("rawString : "+ rawString);
         //이 숫자들 중 가장 큰수와 작은수 판별하고 출력
         //공백을 기준으로 숫자를 나누고, 첫번쨰 숫자와 두 번쨰 숫자를 비교하기..
         //rawString에서 공백을 기준으로 나왔던 모든 수를 하나의 수로 인식해서 array 에 넣고 비교..

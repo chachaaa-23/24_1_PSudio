@@ -1,4 +1,5 @@
 package week9.j093;
+// SimpleChat Server
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,64 +10,64 @@ import java.net.Socket;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+/* 명령어 /userlist 추가하기
 
-//조건대로 ChatThread 만 수정했으나, 앞에 날짜가 무조건 붙는 경우
+ */
 public class ChatServer {
 
     public static void main(String[] args) {
         try{
             ServerSocket server = new ServerSocket(10001);
             System.out.println("Waiting Connections...");
-            HashMap<String, PrintWriter> hm = new HashMap<>();
+            HashMap hm = new HashMap();
             while(true){
                 Socket sock = server.accept();
                 ChatThread chatthread = new ChatThread(sock, hm);
                 chatthread.start();
-            }
+            } // while
         }catch(Exception e){
             System.out.println(e);
         }
-    }
+    } // main
 }
 
 class ChatThread extends Thread{
     private Socket sock;
     private String id;
     private BufferedReader br;
-    private PrintWriter pw;
-    private HashMap<String, PrintWriter> hm;
+    private HashMap hm;
     private boolean initFlag = false;
-
-    public ChatThread(Socket sock, HashMap<String, PrintWriter> hm){
+    public ChatThread(Socket sock, HashMap hm){
         this.sock = sock;
         this.hm = hm;
         try{
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
             br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            pw = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
             id = br.readLine();
+            broadcast(id + " entered.");
+            System.out.println("[Server log] " + id + " entered.");
             synchronized(hm){
-                hm.put(id, pw);
+                hm.put(this.id, pw);
             }
             initFlag = true;
         }catch(Exception ex){
             System.out.println(ex);
         }
     }
-
     public void run(){
         try{
             String line = null;
             while((line = br.readLine()) != null){
-                if(line.equals("/quit")) {
+                if(line.equals("/quit"))
                     break;
-                } else if (line.equals("/userlist")) {
-                    sendUserList();
-                } else if(line.indexOf("/to ") == 0){
+                if(line.indexOf("/to ") == 0){
                     sendmsg(line);
-                } else {
-                    broadcast(id + " : " + line);
                 }
+                if(line.equals("/userlist")){
+                    sendUserlist();
+                }
+                else
+                    broadcast(id + " : " + line);
             }
         }catch(Exception ex){
             System.out.println(ex);
@@ -81,6 +82,27 @@ class ChatThread extends Thread{
                     sock.close();
             }catch(Exception ex){}
         }
+    } // run
+
+    //userList 보내주는 매서드
+    public void sendUserlist() {
+        StringBuilder userList = new StringBuilder("There are " + hm.size() + " users\n");  //StringBuilder써서 메시지 보내기
+        for (Object userName : hm.keySet()) {   //해쉬맵의 모든 사용자 key(id)를
+            userList.append(userName).append(", "); //StringBuilder에 추가.
+        }
+        // Remove the trailing comma and space
+        userList.setLength(userList.length() - 2);  //맨 마지막은 쉼표랑 띄어쓰기 없어야함
+        sendMessageToClient(userList.toString());   //만든 StringBuilder를 클라이언트에게 전달.(by 또다른 매서드)
+    }
+    private void sendMessageToClient(String message) {  //클라이언트에게 메시지 보내는 메서드
+        try {
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
+            //^소켓 출력 스트림 만들기.
+            pw.println(message);    //메시지 보내기
+            pw.flush();
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 
     public void sendmsg(String msg){
@@ -89,38 +111,23 @@ class ChatThread extends Thread{
         if(end != -1){
             String to = msg.substring(start, end);
             String msg2 = msg.substring(end+1);
-            PrintWriter pw = hm.get(to);
-            if(pw != null){
+            Object obj = hm.get(to);
+            if(obj != null){
+                PrintWriter pw = (PrintWriter)obj;
                 pw.println(id + "'s secret message: " + msg2);
                 pw.flush();
-            } else {
-                // If recipient not found, notify sender
-                pw = hm.get(id);
-                pw.println(to + " is not online.");
-                pw.flush();
-            }
+            } // if
         }
-    }
-
+    } // sendmsg
     public void broadcast(String msg){
         synchronized(hm){
-            Collection<PrintWriter> collection = hm.values();
-            Iterator<PrintWriter> iter = collection.iterator();
+            Collection collection = hm.values();
+            Iterator iter = collection.iterator();
             while(iter.hasNext()){
-                PrintWriter pw = iter.next();
+                PrintWriter pw = (PrintWriter)iter.next();
                 pw.println(msg);
                 pw.flush();
             }
         }
-    }
-
-    public void sendUserList(){
-        StringBuilder userList = new StringBuilder("There are " + hm.size() + " users\n");
-        Set<String> userSet = hm.keySet();
-        for (String user : userSet) {
-            userList.append(user).append(", ");
-        }
-        pw.println(userList.toString());
-        pw.flush();
-    }
+    } // broadcast
 }

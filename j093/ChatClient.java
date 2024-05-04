@@ -71,7 +71,7 @@ class InputThread extends Thread{
     public void run(){
         try{
             String line = null;
-            while((line = br.readLine()) != null){  //문자열이 null이 아닐때
+            while(((line = br.readLine()) != null) ){  //문자열이 null이 아닐때
                 //현재 시간과 함계 입력받은 메시지를 출력한다.
                 SimpleDateFormat dataTime = new SimpleDateFormat("HH:mm:ss");
                 String currentTime = dataTime.format(new Date());
