@@ -1,6 +1,12 @@
 {
     "files.associations": {
         "iostream": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "iosfwd": "cpp",
+        "ostream": "cpp",
+        "string": "cpp",
+        "__hash_table": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp"
     }
 }
