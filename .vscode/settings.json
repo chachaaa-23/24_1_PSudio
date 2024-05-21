@@ -7,6 +7,9 @@
         "string": "cpp",
         "__hash_table": "cpp",
         "unordered_map": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "__threading_support": "cpp",
+        "bitset": "cpp",
+        "locale": "cpp"
     }
 }

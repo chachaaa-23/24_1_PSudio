@@ -70,12 +70,12 @@ string rtrim(string str){   //문자열 뒤 공백제거 함수
 void processLastWord(StringInfo& stringinfo) {
     string str = stringinfo.original;
     size_t lastSpacePos = str.find_last_of(" \t");
-
-    if (lastSpacePos != string::npos) {
+//문자열 끝에서부터 공백이나 \t 있는지 찾고, 그때의 위치를 size_t로 저장. 
+    if (lastSpacePos != string::npos) { //string이 null이 아닐 때까지
         stringinfo.trimmedLast = str.substr(lastSpacePos + 1);
     } else {
         stringinfo.trimmedLast = str;
-    }
+    }   //
 
     stringinfo.lastWordLength = stringinfo.trimmedLast.length();
 }
