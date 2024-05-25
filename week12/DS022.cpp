@@ -9,7 +9,8 @@ class EngForGradu{
 
     public: 
         EngForGradu(){      //생성자, 입력도 받음.
-            cin >> name;
+            getline(cin,name);
+            //cin.ignore();
 
             while(1){
                 cout << "LC> ";

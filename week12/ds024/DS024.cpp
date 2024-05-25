@@ -82,7 +82,7 @@ int main() {
 	manager.loadData("classes.txt");
 
 	while(!quit){
-		cout << "Menu 1.List 2.Add 3.Modify 4.Search 5.Apply 6.My classes 7.Save 0.Quit\n";
+		cout << "\nMenu 1.List 2.Add 3.Modify 4.Search 5.Apply 6.My classes 7.Save 0.Quit\n";
 		cout << ">> Menu? > ";
 		cin >> no;
         switch(no){
@@ -179,23 +179,40 @@ void MyClassManager::addClass(){
 // You must complete this function.
     string name;
     int code, unit, grading;
-	cout << ">> code number > ";
-	cin >> code;
-	cout << ">> class name > ";
-	cin >> name;
-	cout << ">> credits > ";
-	cin >> unit;
-	cout << ">> grading (1: A+~F, 2: P/F) > ";
-	cin >> grading;
+	int checkRetry=0;
 
-	// You must complete this section.
-	MyClass *p;		//과목 정보 담고잇는 객체 만들어서
-	p->setCode(code);		//정보 넣고,
-	p->setGrading(grading);
-	p->setName(name);
-	p->setUnit(unit);
+	while(1){
+		checkRetry=0;
 
-	allclasses[count++] = p;	//주소값 연동
+		cout << ">> code number > ";		//코드만 먼저 입력받기(for test!!!)
+			cin >> code;
+
+		//중복코드 입력시,
+		for (int i = 0; i < count; ++i) {
+			//cout << "반복 도는중.. " << allclasses[i]->getCode() <<endl;
+
+			if (allclasses[i]->getCode() == code) {
+				cout << ">> Code duplicated! Retry." << endl;
+				checkRetry = 1;
+				break;
+			}
+		}
+		if(checkRetry == 1 ) continue;
+
+		cout << ">> class name > ";
+		cin >> name;
+		cout << ">> credits > ";
+		cin >> unit;
+		cout << ">> grading (1: A+~F, 2: P/F) > ";
+		cin >> grading;
+
+		// You must complete this section.
+		MyClass *p = new MyClass(code, name, unit, grading);	//과목 정보 담고잇는 객체 만들어서 정보 넣고,
+		allclasses[count] = p;	//주소값 연동
+		count++;
+		return ;
+	}
+	
 }
 
 //Modify a class in the list, 특정 과목의 정보를 수정한다. 
@@ -217,7 +234,7 @@ void MyClassManager::editClass(){
 
 		for(int i=0; i<count; i++){
 			if(code == allclasses[i]->getCode() ){
-				allclasses[i]->toString();
+				cout << "> Current: " << allclasses[i]->toString() << endl;
 
 				cout << "> Enter new class name > ";
 				cin >> name;
@@ -248,6 +265,7 @@ void MyClassManager::editClass(){
 void MyClassManager::applyMyClass(){
 	int keepgoing =0;
 	while(1){
+		keepgoing =0;
 		int codeForCmp=0;
 		cout << ">> Enter a class code > ";
 		cin >> codeForCmp;		//수강신청하려는 코드 입력받고
@@ -255,20 +273,21 @@ void MyClassManager::applyMyClass(){
 		for(int i=0; i<count; i++){
 			if(codeForCmp == allclasses[i]->getCode() ){	//해당되는 코드가 있으면
 			myclasses[mycount++] = allclasses[i];	//그 코드를 myclasses 배열에 추가. 
-			allclasses[i]->toString();	//해당 과목 정보 출력
-			mycount++;
+			cout << "> Current: " << allclasses[i]->toString() << endl;	 //해당 과목 정보 출력
+			//mycount++;   내가 굳이 ++안해줘도 알아서 됨
 
 			cout << ">> Add more?(1:Yes 2:No) > ";
 			cin >> keepgoing;
 			break;	//for loop exit
 			}
 		}
-		if(keepgoing == 1)
-				continue;
-		if(keepgoing == 2)
-			return ;
-		else	
+		if(keepgoing == 0)
 			cout << ">> No such code of class." << endl;
+		else if(keepgoing == 1)
+				continue;
+		else if(keepgoing == 2)
+			return ;
+
 	}
 }
 
@@ -276,7 +295,7 @@ void MyClassManager::applyMyClass(){
 void MyClassManager::printMyClasses(){
 	int creditAll=0;
 	for(int i = 0; i < mycount ; i++){
-		myclasses[i]->toString();
+		cout << i+1 << ". " << myclasses[i]->toString() << endl;	 //해당 과목 정보 출력
 		creditAll += myclasses[i]->getUnit();
 	}
 	cout << "All : " << creditAll << " credits";
@@ -293,28 +312,29 @@ void MyClassManager::saveMyClasses(string filename){
 	*/
 	ofstream file(filename);	//파일을 쓰기 모드로 열기. 
 	if(file.is_open()){		//파일이 정상적으로 열렸으면
+		file << "My Classes" <<endl;
 		for(int i = 0; i < mycount ; i++){
-			file << (i+1) + ". " << myclasses[i]->toString() <<endl;
+			file << (i+1) << ". " << myclasses[i]->toString() <<endl;
 			creditAll += myclasses[i]->getUnit();
 			if(myclasses[i]->getGrading() == 1 )
 				gradeCount++;
 			else if(myclasses[i]->getGrading() == 2 )
 				pfCount++;
 		}
-		file << "All : " + mycount << " classes, " << creditAll + " credits (A+~F "
-		<< gradeCount + " credits, P/F " << pfCount + " credits)" << endl;
+		file << "All : " << mycount << " classes, " << creditAll << " credits (A+~F "
+		<< gradeCount << " credits, P/F " << pfCount << " credits)" << endl;
 
 		file.close();
 	}
-	cout << "> All my classes were saved to " << filename << ".";
+	//cout << "> All my classes were saved to " << filename << ".";
 
 	/* 현재까지 바뀐 최신 과목 정보들을 classes.txt파일에 업데이트 한다. */
 	ofstream filee("classes.txt");
 	if(file.is_open()){		//파일이 정상적으로 열렸으면
-		for(int i = 0; i < mycount ; i++){
-			file << myclasses[i]->toStringSave() <<endl;
+		for(int i = 0; i < count ; i++){
+			file << allclasses[i]->toStringSave() <<endl;
 		}
 		file.close();
 	}
-	cout << "> All of class list were saved to " << filename << ".";
+	//cout << "> All of class list were saved to " << filename << ".";
 }
