@@ -133,7 +133,6 @@ void MyClassManager::loadData(string filename){
     int code, unit, grading;
 	ifstream file(filename);
 	while(!file.eof()){
-        if(file.eof()) break;
 		file >> code >> name >> unit >> grading;
         allclasses[count] = new MyClass(code, name, unit, grading);
 		count++;

@@ -1,0 +1,7 @@
+3.4 Randy
+3.2 Kathy
+2.5 Mini
+3.4 Tom
+3.8 Sally
+3.8 Mickey
+3.6 Peter
