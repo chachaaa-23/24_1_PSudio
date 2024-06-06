@@ -4,25 +4,25 @@ using namespace std;
 
 class Node {
     private:
-        int data;       //바깥의 class에서 접근 불가, getter/setter 필요
+        char data;       //바깥의 class에서 접근 불가, getter/setter 필요
         Node* next;     
 
     public:
-        Node(int data);     //constructor
-        int getData();
-        void setData(int d);
+        Node(char data);     //constructor
+        char getData();
+        void setData(char d);
         Node* getNext();
         void setNext(Node* n);
 
 };
-Node::Node(int data){
+Node::Node(char data){
     this->data = data;  //밖의 원본 변수를 가리키기 위해 this사용. 포인터이므로 -> 연산자 사용
     next = nullptr;
 }
-int Node::getData(){
+char Node::getData(){
     return data;
 }
-void Node::setData(int d){
+void Node::setData(char d){
     data = d;
 }
 Node* Node::getNext(){
@@ -39,10 +39,10 @@ class MyLinkedStack {
     public:
         void initialize();
         bool isEmpty() const;
-        void push(const int& d);
-        int pop();
-        int top() const;
-        int getNodeCnt() const ;    //node의 개수를 가져옴
+        void push(const char& d);
+        char pop();
+        char top() const;
+        char getNodeCnt() const ;    //node의 개수를 가져옴
         MyLinkedStack();
         ~MyLinkedStack();
         void printAll();    //stack을 pop 순서로 출력 (pop은 안함)
@@ -60,7 +60,7 @@ void MyLinkedStack::initialize(){       //초기화
 bool MyLinkedStack::isEmpty() const{
     return stacktop == nullptr;
 }
-void MyLinkedStack::push(const int& d){
+void MyLinkedStack::push(const char& d){
     Node* newNode = new Node(d);    //new를 통해 NOde 객체 생성..
     if(isEmpty()){
         stacktop = newNode;
@@ -70,7 +70,7 @@ void MyLinkedStack::push(const int& d){
     stacktop = newNode;
 }
 
-int MyLinkedStack::pop(){
+char MyLinkedStack::pop(){
     /*
     head에서 연결을 끊고 
     Head의 위치를 옮긴다
@@ -82,22 +82,22 @@ int MyLinkedStack::pop(){
     }
     Node* cur = stacktop;   // 위치값 설정. 
     Node* next = cur->getNext();    //다음 top..
-    int num = cur->getData();
+    char num = cur->getData();
 
     stacktop = next;
-    cur->setNext(nullptr);
+    cur->setNext(0);
     delete cur;
     return num;
 }
 
-int MyLinkedStack::top() const{
+char MyLinkedStack::top() const{
     if(isEmpty()){
         //cout << "Empty Stack!" << endl;
         return 0;
     }
     return stacktop->getData();
 }
-int MyLinkedStack::getNodeCnt() const {
+char MyLinkedStack::getNodeCnt() const {
 //top부터 끝의 Node(node->next == nullptr)까지 반복문. 
     int count =0; 
     Node* cur = stacktop;
