@@ -1,0 +1,86 @@
+#include "cardManager.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <map>
+
+extern map<string, Card*> allclasses;
+
+CardManager::~CardManager(){
+    vector<Card*>::iterator iter;
+    for (iter = myclasses.begin(); iter != myclasses.end(); ++iter) {
+		delete (*iter); //각각의 card vector, 일일히 deallocate
+	}
+}
+
+void CardManager::printAll(){   //#1
+    for (int i=0; i<myclasses.size(); i++){
+        cout << i+1 << " | " << myclasses[i]->toString() << endl;
+    }
+}
+
+void CardManager::addCard(){    //#2
+    string code, grade;
+	cout << ">> Enter class code > ";
+	cin >> code;
+    cin.ignore();
+    if(allclasses.count(code)>0){
+        cout << allclasses[code]->toStringShort() << endl;
+	    cout << ">> Enter grade > ";
+	    cin >> grade;
+        cin.ignore();
+        Card* new_card = new Card(allclasses[code], grade);
+        //새로운 card객체 만들어서 Vector에 넣기(스택같은 것)
+        myclasses.push_back(new_card);
+        count++;
+        total_credit += new_card->getCredit();
+    }
+    else{
+        cout << "No such class." << endl;
+    }
+}
+
+void CardManager::editCard(){   //#3
+	int no;
+    string new_grade;
+	cout << ">> Enter a Card number > ";
+	cin >> no;
+    cout << myclasses[no-1]->toString() << endl;
+    cout << ">> Enter new grade > ";
+    cin >> new_grade;
+    myclasses[no-1]->setGrade(new_grade);
+    cout << "Grade changed." << endl;	
+}
+
+void CardManager::sortByCode(){     //#4
+    sort(myclasses.begin(), myclasses.end(), Card::cmpCode);
+}
+
+void CardManager::loadCards(string filename){   //#6
+    string line, code, grade;
+    int count=0;
+	ifstream file(filename);
+	while(!file.eof()){
+        if(file.eof()) break;
+		file >> code >> grade;
+        Card* new_card = new Card(allclasses[code], grade);
+        myclasses.push_back(new_card);
+        count++;
+        total_credit += new_card->getCredit();
+	}
+	file.close();
+    cout << count << " classes are loaded.\n";
+}
+
+void CardManager::findCards(string name){   //#5
+	int found = 0;
+	cout << "Searching keyword: " << name << endl;
+    for (int i=0; i<myclasses.size(); i++){
+		if(myclasses[i]->getName().find(name) != string::npos){
+			found++;
+            cout << i+1 << " | " << myclasses[i]->toString() << endl;
+		}
+	}
+	cout << found << " classes found.\n";
+}
