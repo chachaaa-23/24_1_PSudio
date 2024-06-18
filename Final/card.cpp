@@ -32,3 +32,8 @@ string Card::toStringShort(){
     return sstm.str();
 }
 
+void Card::setGrade(string newgrade){
+    grade = newgrade;
+        //grade에 따른 score 수정
+    score = gradescore[grade];
+};

@@ -57,7 +57,7 @@ bool MyQueue<T>::isEmpty() const {
 
 template <typename T>
 bool MyQueue<T>::isFull() const {
-    return (rear - front + 1 == maxsize);
+    return (rear - front + 1 == maxsize); //현재길이 = 최대사이즈? 
 }
 
 template <typename T>

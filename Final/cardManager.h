@@ -28,7 +28,8 @@ public:
     void sortByCode();
     void addCard(); // Add a card
     void editCard(); // Change grade of a card
-
+    void Filter();  //#8
+    void Save();    //#9
 };
 
 #endif

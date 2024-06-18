@@ -21,7 +21,7 @@ int main(){
 //vector(stack, LIFO)와 Map(hashmap, key-value)
 
 	while(!quit){
-		cout << "[Menu] 1.View 2.Add 3.Change 4.Sort 5.Search 6.Load 7.All 0.Quit\n";
+		cout << "[Menu] 1.View 2.Add 3.Change 4.Sort 5.Search 6.Load 7.All 8.Filter 9.Save 0.Quit\n";
 		cout << ">> Menu? > ";
 		cin >> no;
         switch(no){
@@ -53,9 +53,17 @@ int main(){
 	    		manager.loadCards("mycard.txt");
                 break;
     		case 7:
-    			cout << ">>7.All Classes\n";
+    			cout << ">> 7.All Classes\n";
                 printAllClasses();
                 break;
+			case 8:
+				cout << ">> 8.Filter\n";
+				manager.Filter();
+				cin.ignore();
+				break;
+			case 9:
+				cout << ">> 9.Save\n ";
+				manager.Save();
             case 0:
                 quit = 1;
                 break;

@@ -1,0 +1,7 @@
+ECE10002 [3]C_Programming A+ 4.5
+ECE10004 [2]Introduction_CSEE A0 4
+ECE10005 [1]Coding_Studio B+ 3.5
+ECE20008 [3]Practical_Project1 B0 3
+ECE20010 [3]Data_Structure C+ 2.5
+ECE20016 [3]JAVA_Programming A+ 4.5
+ECE40093 [4]Capstone_Design2 A0 4
