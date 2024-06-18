@@ -1,3 +1,4 @@
+ECE20010 [3]Data_Structure F 0
 ECE10002 [3]C_Programming A+ 4.5
 ECE10004 [2]Introduction_CSEE A0 4
 ECE10005 [1]Coding_Studio B+ 3.5
